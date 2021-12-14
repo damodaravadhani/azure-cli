@@ -17,7 +17,8 @@ def load_command_table(self, _):
                                                                      disaster_recovery_mgmt_client_factory,
                                                                      cluster_mgmt_client_factory,
                                                                      private_endpoint_connections_mgmt_client_factory,
-                                                                     private_link_mgmt_client_factory)
+                                                                     private_link_mgmt_client_factory,
+                                                                     schema_registry_mgmt_client_factory)
 
     eh_namespace_util = CliCommandType(
         operations_tmpl='azure.mgmt.eventhub.operations#NamespacesOperations.{}',
@@ -53,6 +54,12 @@ def load_command_table(self, _):
         operations_tmpl='azure.mgmt.eventhub.operations#PrivateLinkResourcesOperations.{}',
         client_factory=private_link_mgmt_client_factory,
         resource_type=ResourceType.MGMT_EVENTHUB)
+
+    eh_schema_registry_util = CliCommandType(
+        operations_tmpl='azure.mgmt.eventhub.operations#SchemaRegistryOperations.{}',
+        client_factory=schema_registry_mgmt_client_factory,
+        resource_type=ResourceType.MGMT_EVENTHUB
+    )
 
     from ._validator import validate_subnet
 
@@ -153,3 +160,12 @@ def load_command_table(self, _):
         g.custom_command('add', 'cli_networkrule_createupdate', validator=validate_subnet)
         g.show_command('list', 'get_network_rule_set')
         g.custom_command('remove', 'cli_networkrule_delete', validator=validate_subnet)
+
+# SchemaRegistry Region
+
+    with self.command_group('eventhubs namespace schema-registry', eh_schema_registry_util, resource_type=ResourceType.MGMT_EVENTHUB, client_factory=schema_registry_mgmt_client_factory) as g:
+        g.custom_command('create', 'cli_schemaregistry_createupdate')
+        g.command('list', 'list_by_namespace')
+        g.show_command('show', 'get')
+        g.command('delete', 'delete')
+        g.generic_update_command('update', custom_func_name='cli_schemaregistry_update', custom_func_type=eventhubs_custom)
