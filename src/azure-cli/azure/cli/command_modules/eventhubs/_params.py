@@ -231,8 +231,8 @@ def load_arguments_eh(self, _):
         c.argument('namespace_name', options_list=['--namespace-name'], id_part=None, help='Name of Namespace')
 
     with self.argument_context('eventhubs namespace schema-registry') as c:
-        c.argument('namespace_name', options_list=['--namespace-name'], id_part=None, help='name of Namespace')
-        c.argument('schema_group_name', arg_type=name_type, id_part=None, help='name of schema group')
+        c.argument('namespace_name', arg_type=namespace_name_arg_type, options_list=['--namespace-name'], help='name of Namespace')
+        c.argument('schema_group_name', arg_type=name_type, id_part='child_name_1', help='name of schema group')
 
     for scope in ['eventhubs namespace schema-registry create', 'eventhubs namespace schema-registry update']:
         with self.argument_context(scope) as c:
